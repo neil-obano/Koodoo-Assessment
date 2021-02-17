@@ -2,9 +2,9 @@
 
 ## Structure
 
-./index.js function code submission
-./index.test.js jest test cases
-./test-data.js contains dummy data and helpers for the tests
+- **index.js** function code submission
+- **index.test.js** jest test cases
+- **test-data.js** contains dummy data and helpers for the tests
 
 ## General info
 
