@@ -1,14 +1,22 @@
 const accountTypeChecker = (accountBalanceHistory) => {
   if (accountBalanceHistory && accountBalanceHistory.length > 1) {
-    let amounts = accountBalanceHistory.map((monthData) => {
-      if (!monthData.account) throw "missing account object";
-      else if (!monthData.account.balance)
-        throw "missing account balance object";
-      else if (isNaN(parseInt(monthData.account.balance.amount)))
-        throw "missing account balance amount";
-
-      return monthData.account.balance.amount;
-    });
+    let amounts = accountBalanceHistory
+      .sort((prev, cur) => {
+        // sort by month
+        if (!prev.account || !cur.account) throw "missing account object";
+        else if (!prev.account.balance || !cur.account.balance)
+          throw "missing account balance object";
+        else if (
+          typeof prev.account.balance.amount !== "number" ||
+          typeof cur.account.balance.amount !== "number"
+        )
+          throw "missing account balance amount";
+        return prev.account.balance.amount - cur.account.balance.amount;
+      })
+      .map((monthData) => {
+        // extract balance
+        return monthData.account.balance.amount;
+      });
 
     // work out first difference
     let firstDifference = Math.abs(amounts[0] - amounts[1]);

@@ -3,6 +3,8 @@ const indexJS = require("./index");
 
 // test cases for Koodoo
 describe("accountTypeChecker", () => {
+  const performanceLimit = 500;
+
   test(
     "accountTypeChecker should return B when the balance " +
       "increases by the same amount each month.",
@@ -65,7 +67,7 @@ describe("accountTypeChecker", () => {
 
   test(
     "accountTypeChecker should complete " +
-      "in under 500 milliseconds for 1,000,000 records where the monthly amount difference changes",
+      `in under ${performanceLimit} milliseconds for 1,000,000 records where the monthly amount difference changes`,
     () => {
       let accountData = [];
       for (var a = 0; a < 1000000; a++) {
@@ -77,13 +79,13 @@ describe("accountTypeChecker", () => {
       let endTime = performance.now();
       let totalTime = endTime - startTime;
       expect(result).toBe("A");
-      expect(totalTime < 500).toBeTruthy();
+      expect(totalTime < performanceLimit).toBeTruthy();
     }
   );
 
   test(
     "accountTypeChecker should complete " +
-      "in under 500 milliseconds for 1,000,000 records where the monthly amount difference remains constant",
+      `in under ${performanceLimit} milliseconds for 1,000,000 records where the monthly amount difference remains constant`,
     () => {
       let accountData = [];
       for (var a = 0; a < 1000000; a++) {
@@ -94,7 +96,7 @@ describe("accountTypeChecker", () => {
       let endTime = performance.now();
       let totalTime = endTime - startTime;
       expect(result).toBe("B");
-      expect(totalTime < 500).toBeTruthy();
+      expect(totalTime < performanceLimit).toBeTruthy();
     }
   );
 
@@ -105,7 +107,7 @@ describe("accountTypeChecker", () => {
     }
     try {
       delete accountData[5].account;
-      let result = indexJS.accountTypeChecker(accountData);
+      indexJS.accountTypeChecker(accountData);
     } catch (e) {
       expect(e).toBe("missing account object");
     }
@@ -149,4 +151,22 @@ describe("accountTypeChecker", () => {
       );
     }
   });
+
+  test(
+    "accountTypeChecker should return B when the balance " +
+      "decreases by the same amount each month. For an unsorted account data array",
+    () => {
+      let accountData = [];
+
+      for (var a = 0; a < 10; a++) {
+        accountData.push(testData.createMonthData(a, 1000 - a * 100));
+      }
+
+      // swap some months around
+      let curMonth = accountData[2];
+      accountData[2] = accountData[9];
+      accountData[9] = curMonth;
+      expect(indexJS.accountTypeChecker(accountData)).toBe("B");
+    }
+  );
 });
