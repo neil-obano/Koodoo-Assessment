@@ -1,0 +1,17 @@
+{
+  "name": "koodoo-test",
+  "version": "1.0.0",
+  "description": "job application test",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "verbose": true
+  },
+  "author": "Neil Obano",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}
