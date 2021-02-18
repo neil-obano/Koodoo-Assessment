@@ -11,7 +11,7 @@ const accountTypeChecker = (accountBalanceHistory) => {
           typeof cur.account.balance.amount !== "number"
         )
           throw "missing account balance amount";
-        return prev.account.balance.amount - cur.account.balance.amount;
+        return prev.monthNumber - cur.monthNumber;
       })
       .map((monthData) => {
         // extract balance
